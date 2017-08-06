@@ -2,10 +2,6 @@ package com.revolut.api.demo.resources;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.xml.bind.DataBindingException;
-
-import com.codahale.metrics.annotation.Timed;
 import com.revolut.api.demo.api.Account;
 import com.revolut.api.demo.core.AccountDAO;
 import com.revolut.api.demo.utils.AccountAccessException;
