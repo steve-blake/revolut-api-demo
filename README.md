@@ -23,3 +23,18 @@ Revolut API Demo
 
 - `mvn package`
 - `java -jar target/revolut-account-api-demo-1.0-SNAPSHOT.jar server`
+
+# API Usage
+
+- Eg. http://localhost/account/get-all
+- GET /account
+- GET /account/deposit/{id}/{amount}
+- GET /account/get-all
+- GET /account/get/{id}
+- GET /account/transfer/{fromId}/{toId}/{amount}
+- POST /account/update
+- GET /account/withdraw/{id}/{amount}
+- GET /user
+- GET /user/get-all
+- GET /user/get/{id}
+- POST /user/update
