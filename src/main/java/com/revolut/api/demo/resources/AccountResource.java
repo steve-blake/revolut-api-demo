@@ -2,10 +2,13 @@ package com.revolut.api.demo.resources;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.xml.bind.DataBindingException;
 
 import com.codahale.metrics.annotation.Timed;
 import com.revolut.api.demo.api.Account;
 import com.revolut.api.demo.core.AccountDAO;
+import com.revolut.api.demo.utils.AccountAccessException;
 
 import java.util.List;
 
@@ -25,8 +28,17 @@ public class AccountResource {
     @GET
     @Path("/get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Account getAccount(@PathParam("id") int id) {
-        return AccountDAO.getById(id);
+    public Account getAccount(@PathParam("id") int id) throws AccountAccessException {
+
+        try {
+            if (AccountDAO.getById(id) != null)
+                return AccountDAO.getById(id);
+            else
+                throw new AccountAccessException("Account id Not found");
+        } catch (Exception ex) {
+
+        }
+        return new Account();
     }
 
     @GET
