@@ -1,5 +1,6 @@
 package com.revolut.api.demo;
 
+import com.revolut.api.demo.api.Account;
 import com.revolut.api.demo.api.Message;
 import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.testing.junit.DropwizardAppRule;
@@ -29,11 +30,36 @@ public class AccountTest {
     @Test
     public void shouldReturnAccountTest() {
         String url = String.format("%s/account", baseUrl);
-
         Response response = client.target(url).request().accept(APPLICATION_JSON_TYPE).get();
-        assertThat(response.getStatus()).isEqualTo(200);
 
-        Message message = response.readEntity(Message.class);
-        assertThat(message.getMessage()).isEqualTo("Account");
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.readEntity(String.class)).isEqualTo("Account API");
+    }
+
+    @Test
+    public void withdrawFromAccountTest() {
+        String url = String.format("%s/account/withdraw/1/20", baseUrl);
+        Response response = client.target(url).request().get();
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.readEntity(String.class)).isEqualTo("79.99");
+    }
+
+    @Test
+    public void depositIntoAccountTest() {
+        String url = String.format("%s/account/deposit/1/50", baseUrl);
+        Response response = client.target(url).request().get();
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.readEntity(String.class)).isEqualTo("129.99");
+    }
+
+   @Test
+    public void transferBetweenAccountsTest() {
+        String url = String.format("%s/account/transfer/2/3/20", baseUrl);
+        Response response = client.target(url).request().get();
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.readEntity(String.class)).isEqualTo("79.99");
     }
 }

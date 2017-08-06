@@ -1,6 +1,5 @@
 package com.revolut.api.demo;
 
-import com.revolut.api.demo.api.IAccount;
 import com.revolut.api.demo.resources.AccountResource;
 import com.revolut.api.demo.resources.UserResource;
 import io.dropwizard.Application;
@@ -16,15 +15,8 @@ public class AccountApplication extends Application<AccountConfig> {
     public void run(AccountConfig config, Environment environment) throws Exception {
         environment.getObjectMapper().setPropertyNamingStrategy(SNAKE_CASE);
 
-        final AccountResource accResource = new AccountResource(
-                config.getDefaultName()
-        );
-
-        final UserResource userResource = new UserResource(
-                config.getDefaultName()
-        );
-
-        environment.jersey().register(accResource);
-        environment.jersey().register(userResource);
+        // Register resources for API
+        environment.jersey().register(new AccountResource());
+        environment.jersey().register(new UserResource());
     }
 }

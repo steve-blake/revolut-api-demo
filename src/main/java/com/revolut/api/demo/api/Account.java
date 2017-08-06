@@ -1,8 +1,6 @@
-package com.revolut.api.demo.model;
+package com.revolut.api.demo.api;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.revolut.api.demo.utils.Validation;
 import java.util.Currency;
 
 /**
@@ -12,7 +10,7 @@ import java.util.Currency;
  */
  public class Account {
 
-    public long accountId;
+    public int accountId;
     public AccountType accountType;
     public String accountName;
     public Currency currency;
@@ -36,20 +34,16 @@ import java.util.Currency;
      * @param currency
      * @param balance
      */
-
-    @JsonCreator
-    public Account(@JsonProperty("account") long accountId, AccountType accountType, String accountName, Currency currency, double balance) {
-        Validation.checkNotNull(accountId, "account id is required");
-        Validation.checkNotNull(accountName, "account name is required");
+    public Account(int accountId, AccountType accountType, String accountName, Currency currency, double balance) {
         this.accountId = accountId;
         this.accountType = accountType;
         this.accountName = accountName;
-        this.balance = balance;
         this.currency = currency;
+        this.balance = balance;
     }
 
     @JsonProperty
-    public long getAccountId() {
+    public int getAccountId() {
         return accountId;
     }
 
@@ -64,7 +58,7 @@ import java.util.Currency;
     }
 
     @JsonProperty
-    public double getBalance(long accountId) {
+    public double getBalance() {
         return balance;
     }
 

@@ -1,45 +1,71 @@
 package com.revolut.api.demo.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-import com.revolut.api.demo.api.IAccount;
-import com.revolut.api.demo.model.Account;
-import com.revolut.api.demo.utils.AccountAccessException;
+import com.codahale.metrics.annotation.Timed;
+import com.revolut.api.demo.api.Account;
+import com.revolut.api.demo.core.AccountDAO;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @Path("/account")
-@Produces(MediaType.APPLICATION_JSON)
 public class AccountResource {
 
-    //private final IAccount accountInterface;
-    private final String defaultName;
-
-    public AccountResource(String defaultName) {
-        this.defaultName = defaultName;
-        //this.accountInterface = accountInterface;
-    }
-
-    /*@GET
-    public List<Account> getAllAccounts() throws AccountAccessException {
-
-        //return accountInterface.getAllAccounts();
-    }*/
+    private static final String MESSAGE = "Account API";
 
     @GET
-    public Account getAccount(@QueryParam("id") long accountId) throws AccountAccessException {
-        try {
-          //  Account account = accountInterface.getAccountById(accountId);
-            return new Account();
-        } catch (Exception ex) {
-            ex.getMessage();
-        }
-        return new Account();
+    @Produces(APPLICATION_JSON)
+    public String setup() {
+        return new String(MESSAGE);
+    }
+
+    @GET
+    @Path("/get/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Account getAccount(@PathParam("id") int id) {
+        return AccountDAO.getById(id);
+    }
+
+    @GET
+    @Path("/get-all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Account> getAccounts() {
+        return AccountDAO.getAll();
+    }
+
+    @GET
+    @Path("/transfer/{fromId}/{toId}/{amount}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public double transferBetweenAccounts(@PathParam("fromId") int fromId, @PathParam("toId") int toId, @PathParam("amount") double amount) {
+        double balance = AccountDAO.transferBetweenAccounts(fromId, toId, amount);
+        return (double) Math.round(balance * 100) / 100;
+    }
+
+    @GET
+    @Path("/withdraw/{id}/{amount}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public double withdrawFromAccount(@PathParam("id") int id, @PathParam("amount") double amount) {
+        double balance = AccountDAO.withdrawFromAccount(id, amount);
+        return (double) Math.round(balance * 100) / 100;
+    }
+
+    @GET
+    @Path("/deposit/{id}/{amount}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public double depositIntoAccount(@PathParam("id") int id, @PathParam("amount") double amount) {
+        double balance = AccountDAO.depositIntoAccount(id, amount);
+        return (double) Math.round(balance * 100) / 100;
+    }
+
+    @POST
+    @Path("/update")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String updateAccount(Account account) {
+        return AccountDAO.updateAccount(account);
     }
 }
 

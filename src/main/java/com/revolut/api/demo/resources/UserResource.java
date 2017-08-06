@@ -1,32 +1,50 @@
 package com.revolut.api.demo.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import com.codahale.metrics.annotation.Timed;
+import com.revolut.api.demo.api.Account;
+import com.revolut.api.demo.api.User;
+import com.revolut.api.demo.core.AccountDAO;
+import com.revolut.api.demo.core.UserDAO;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-
-import com.revolut.api.demo.api.IUser;
-import com.revolut.api.demo.model.User;
-import com.revolut.api.demo.utils.AccountAccessException;
-
-import java.util.List;
 
 @Path("/user")
 public class UserResource {
 
-    private final String defaultName;
+    private static final String MESSAGE = "Account API";
 
-    public UserResource(String defaultName) {
-        this.defaultName = defaultName;
+    @GET
+    @Produces(APPLICATION_JSON)
+    public String setup() {
+        return new String(MESSAGE);
     }
 
-    /*@GET
-    @Produces(APPLICATION_JSON)
-    public List<User> getAllUsers() throws AccountAccessException {
+    @GET
+    @Path("/get/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User getUser(@PathParam("id") int id) {
+        return UserDAO.getById(id);
+    }
 
-        return List();
-    }*/
+    @GET
+    @Path("/get-all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<User> getUsers() {
+        return UserDAO.getAll();
+    }
+
+    @POST
+    @Timed
+    @Path("/update")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String updateUser(User user) {
+        return UserDAO.updateUser(user);
+    }
 
 }
 
